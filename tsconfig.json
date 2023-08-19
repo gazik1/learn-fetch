@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2015",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": ["dom", "dom.iterable", "esnext", "webworker"],
     "sourceMap": true,
     "allowJs": true,
     "skipLibCheck": true,
@@ -25,6 +25,6 @@
       "@components/*": ["src/components/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "service_worker"],
   "exclude": ["public", "node_modules"]
 }

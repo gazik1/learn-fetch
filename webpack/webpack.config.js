@@ -8,7 +8,11 @@ const ESLintPlugin = require('eslint-webpack-plugin')
 
 module.exports = {
   entry: {
-    app: './src/index.ts'
+    sw: './service_worker/index.ts',
+    app: {
+      dependOn: 'sw',
+      import: './src/index.ts'
+    }
   },
   plugins: [
     new EnvironmentPlugin([]),
@@ -28,8 +32,6 @@ module.exports = {
       {
         test: /\.(ts|js)$/,
         loader: 'esbuild-loader',
-        include: [resolve(__dirname, 'src')],
-        exclude: /node_modules/,
         options: {
           target: 'es2015'
         }
