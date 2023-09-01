@@ -1,4 +1,5 @@
 import { VERSION } from './constants/version'
+import { StudentSchema } from './schemas/student'
 import { cacheService } from './services/cache/cache.service'
 import { studentService } from './services/student'
 
@@ -25,18 +26,44 @@ self.onfetch = (event) => {
     const data = studentService.getStudents()
     return event.respondWith(new Response(JSON.stringify({ data })))
   }
+
   if (method === 'POST' && url === 'https://learn-innodom.com/students/create') {
-    const data = event.request.json().then(studentService.createStudent)
-    return event.respondWith(new Response(JSON.stringify({ data })))
+    return event.respondWith(
+      (async () => {
+        try {
+          const body = await event.request.json()
+          const dto = await StudentSchema.validate(body)
+          const data = studentService.createStudent(dto)
+
+          return new Response(JSON.stringify({ data }))
+        } catch (error) {
+          return new Response(JSON.stringify(error), { status: 503 })
+        }
+      })()
+    )
   }
+
   if (method === 'DELETE' && url.includes('https://learn-innodom.com/students/delete/')) {
     const id = url.split('/').pop()!
     const data = studentService.deleteStudent(id)
     return event.respondWith(new Response(JSON.stringify({ data })))
   }
+
   if (method === 'PATCH' && url.includes('https://learn-innodom.com/students/update/')) {
     const id = url.split('/').pop()!
-    const data = event.request.json().then((body) => studentService.updateStudent(id, body))
-    return event.respondWith(new Response(JSON.stringify({ data })))
+
+    return event.respondWith(
+      (async () => {
+        try {
+          const body = await event.request.json()
+          const dto = await StudentSchema.validate(body)
+          const data = studentService.updateStudent(id, dto)
+
+          return new Response(JSON.stringify({ data }))
+        } catch (error) {
+          return new Response(JSON.stringify(error), { status: 503 })
+        }
+      })()
+    )
   }
 }

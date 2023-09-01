@@ -7,7 +7,8 @@
     "build": "webpack --config webpack/webpack.prod.js"
   },
   "dependencies": {
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "yup": "^1.2.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.18",
